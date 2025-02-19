@@ -15,21 +15,36 @@ class _DigitalPetAppState extends State<DigitalPetApp> {
     Timer? hungerTimer;
     int happinessLevel = 50;
     int hungerLevel = 50;
+    String petMood = "Neutral 😐";
+    Color petColor = Colors.yellow;
 
   @override
   void initState() {
     super.initState();
     _startHungerTimer();
   }
-    String get petMood {
-    if (happinessLevel >= 70) {
-      return "Happy 😃";
-    } else if (happinessLevel >= 40) {
-      return "Neutral 😐";
+
+void _updatePetMood() {
+    if (happinessLevel > 70) {
+      setState(() {
+        petMood = "Happy 😃";
+        petColor = Colors.green;
+        
+      });
+    } else if (happinessLevel >= 30 || happinessLevel <=70) {
+      setState(() {
+        petMood = "Neutral 😐";
+        petColor = Colors.orange;
+      });
     } else {
-      return "Unhappy 😢";
+      setState(() {
+        petMood = "Unhappy 😢";
+        petColor = Colors.red;
+      });
     }
   }
+
+  
 
   // Function to start automatic hunger increase
   void _startHungerTimer() {
@@ -38,7 +53,7 @@ class _DigitalPetAppState extends State<DigitalPetApp> {
         setState(() {
           hungerLevel = (hungerLevel + 5).clamp(0, 100);
           _updateHappiness();
-        //  print('Mood: $petMood');
+        _updatePetMood();
         });
     });
   }
@@ -50,6 +65,7 @@ class _DigitalPetAppState extends State<DigitalPetApp> {
     setState(() {
       happinessLevel = (happinessLevel + 10).clamp(0, 100);
       _updateHunger();
+      _updatePetMood();
 
     });
   }
@@ -59,6 +75,7 @@ class _DigitalPetAppState extends State<DigitalPetApp> {
     setState(() {
       hungerLevel = (hungerLevel - 10).clamp(0, 100);
       _updateHappiness();
+      _updatePetMood();
     });
   }
   
@@ -90,56 +107,32 @@ class _DigitalPetAppState extends State<DigitalPetApp> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            
-            // Custom pet name input
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: TextField(
-                decoration: InputDecoration(
-                  labelText: "Enter your pet's name",
-                  border: OutlineInputBorder(),
-                ),
-                onSubmitted: (value){
-                  setState((){
-                    petName = value;
-                  });
-                },
-              ),
-            ),
-            SizedBox(height: 16.0),
-            
             Text(
-              'Name: $petName',
-              style: TextStyle(fontSize: 20.0),
+            'Name: $petName',
+            style: TextStyle(fontSize: 20.0, color: petColor),
             ),
             SizedBox(height: 16.0),
-
             Text(
             'Happiness Level: $happinessLevel',
             style: TextStyle(fontSize: 20.0),
+            
+            
             ),
-            
             SizedBox(height: 16.0),
-            
             Text(
               'Hunger Level: $hungerLevel',
               style: TextStyle(fontSize: 20.0),
             ),
-            
             Text(
               'Mood: $petMood',
               style: TextStyle(fontSize: 20.0),
             ),
-
             SizedBox(height: 32.0),
-            
             ElevatedButton(
               onPressed: _playWithPet,
               child: Text('Play with Your Pet'),
             ),
-            
             SizedBox(height: 16.0),
-            
             ElevatedButton(
               onPressed: _feedPet,
               child: Text('Feed Your Pet'),
