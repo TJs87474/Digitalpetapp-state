@@ -22,16 +22,26 @@ class _DigitalPetAppState extends State<DigitalPetApp> {
     super.initState();
     _startHungerTimer();
   }
+    String get petMood {
+    if (happinessLevel >= 70) {
+      return "Happy 😃";
+    } else if (happinessLevel >= 40) {
+      return "Neutral 😐";
+    } else {
+      return "Unhappy 😢";
+    }
+  }
 
   // Function to start automatic hunger increase
   void _startHungerTimer() {
-    hungerTimer = Timer.periodic(Duration(seconds: 30), (timer) 
+    hungerTimer = Timer.periodic(Duration(seconds: 10), (timer) 
     {
       if (!gameOver){
         setState(() {
           hungerLevel = (hungerLevel + 5).clamp(0, 100);
           _updateHappiness();
           _checkGameOver();
+        //  print('Mood: $petMood');
         });
       }
     });
@@ -67,7 +77,6 @@ class _DigitalPetAppState extends State<DigitalPetApp> {
     }
   }
 
-
   // Function to show dialogs
   void _showDialog(String title, String message, {bool reset = false}) {
     showDialog(
@@ -92,7 +101,6 @@ class _DigitalPetAppState extends State<DigitalPetApp> {
     );
   }
 
-  
   // Function to increase happiness and update hunger when playing with the pet
   void _playWithPet() {
     setState(() {
@@ -177,6 +185,11 @@ class _DigitalPetAppState extends State<DigitalPetApp> {
               style: TextStyle(fontSize: 20.0),
             ),
             
+            Text(
+              'Mood: $petMood',
+              style: TextStyle(fontSize: 20.0),
+            ),
+
             SizedBox(height: 32.0),
             
             ElevatedButton(
