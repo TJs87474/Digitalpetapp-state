@@ -77,26 +77,51 @@ class _DigitalPetAppState extends State<DigitalPetApp> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-            'Name: $petName',
-            style: TextStyle(fontSize: 20.0),
+            
+            // Custom pet name input
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: TextField(
+                decoration: InputDecoration(
+                  labelText: "Enter your pet's name",
+                  border: OutlineInputBorder(),
+                ),
+                onSubmitted: (value){
+                  setState((){
+                    petName = value;
+                  });
+                },
+              ),
             ),
             SizedBox(height: 16.0),
+            
+            Text(
+              'Name: $petName',
+              style: TextStyle(fontSize: 20.0),
+            ),
+            SizedBox(height: 16.0),
+
             Text(
             'Happiness Level: $happinessLevel',
             style: TextStyle(fontSize: 20.0),
             ),
+            
             SizedBox(height: 16.0),
+            
             Text(
               'Hunger Level: $hungerLevel',
               style: TextStyle(fontSize: 20.0),
             ),
+            
             SizedBox(height: 32.0),
+            
             ElevatedButton(
               onPressed: _playWithPet,
               child: Text('Play with Your Pet'),
             ),
+            
             SizedBox(height: 16.0),
+            
             ElevatedButton(
               onPressed: _feedPet,
               child: Text('Feed Your Pet'),
