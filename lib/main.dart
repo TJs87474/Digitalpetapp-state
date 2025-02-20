@@ -11,6 +11,7 @@ class DigitalPetApp extends StatefulWidget {
 }
 
 class _DigitalPetAppState extends State<DigitalPetApp> {
+    int energyLevel = 100;
     String petName = "Your Pet";
     Timer? hungerTimer;
     int happinessLevel = 50;
@@ -39,6 +40,7 @@ class _DigitalPetAppState extends State<DigitalPetApp> {
       if (!gameOver){
         setState(() {
           hungerLevel = (hungerLevel + 5).clamp(0, 100);
+          energyLevel = (energyLevel - 3).clamp(0, 100);
           _updateHappiness();
           _checkGameOver();
         //  print('Mood: $petMood');
@@ -105,6 +107,7 @@ class _DigitalPetAppState extends State<DigitalPetApp> {
   void _playWithPet() {
     setState(() {
       happinessLevel = (happinessLevel + 10).clamp(0, 100);
+      energyLevel = (energyLevel - 10).clamp(0,100);
       _updateHunger();
       _checkWin();
       _checkGameOver();
@@ -115,12 +118,22 @@ class _DigitalPetAppState extends State<DigitalPetApp> {
   void _feedPet() {
     setState(() {
       hungerLevel = (hungerLevel - 10).clamp(0, 100);
+      energyLevel = (energyLevel + 5).clamp(0,100);
       _updateHappiness();
       _checkWin();
       _checkGameOver();
     });
   }
   
+  // Function to let the pet rest
+  // Increases energy, slightly decreases happiness
+  void _restPet() {
+    setState(() {
+      energyLevel = (energyLevel + 15).clamp(0, 100);
+      happinessLevel = (happinessLevel - 5).clamp(0, 100);
+    });
+  }
+
   // Update happiness based on hunger level
   void _updateHappiness() {
     if (hungerLevel < 30) {
@@ -202,6 +215,27 @@ class _DigitalPetAppState extends State<DigitalPetApp> {
             ElevatedButton(
               onPressed: _feedPet,
               child: Text('Feed Your Pet'),
+            ),
+
+            SizedBox(height: 16.0),
+            Text(
+              'Energy Level:',
+              style: TextStyle(fontSize: 20.0),
+            ),
+
+            SizedBox(height: 8.0),
+            LinearProgressIndicator(
+              value: energyLevel / 100,
+              backgroundColor: Colors.grey[300],
+              color: Colors.blue,
+              minHeight: 10,
+            ),
+            SizedBox(height: 32.0),
+
+            SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: _restPet,
+              child: Text('Let Your Pet Rest'),
             ),
           ],
         ),
