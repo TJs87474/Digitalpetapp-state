@@ -143,7 +143,6 @@ void _updatePetMood() {
       hungerLevel = (hungerLevel - 10).clamp(0, 100);
       energyLevel = (energyLevel + 5).clamp(0,100);
       _updateHappiness();
- moodcolors
       _updatePetMood();
 
       _checkWin();
