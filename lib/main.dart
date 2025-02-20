@@ -1,26 +1,36 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+
 void main() {
   runApp(MaterialApp(
-  home: DigitalPetApp(),
+    home: DigitalPetApp(),
   ));
 }
+
 class DigitalPetApp extends StatefulWidget {
   @override
   _DigitalPetAppState createState() => _DigitalPetAppState();
 }
 
 class _DigitalPetAppState extends State<DigitalPetApp> {
-    int energyLevel = 100;
-    String petName = "Your Pet";
-    Timer? hungerTimer;
-    int happinessLevel = 50;
-    int hungerLevel = 50;
+  int energyLevel = 100;
+  String petName = "Your Pet";
+  Timer? hungerTimer;
+  int happinessLevel = 50;
+  int hungerLevel = 50;
 
-    String petMood = "Neutral 😐";
-    Color petColor = Colors.orange;
+  String petMood = "Neutral 😐";
+  Color petColor = Colors.yellow;
 
-    bool gameOver = false;
+  bool gameOver = false;
+
+  String petMood = "Neutral 😐";
+  Color petColor = Colors.orange;
+  // Activity options for the dropdown
+  List<String> activities = ['Play', 'Feed', 'Rest'];
+
+  // Selected activity from dropdown
+  String selectedActivity = 'Play';
 
   @override
   void initState() {
@@ -28,14 +38,14 @@ class _DigitalPetAppState extends State<DigitalPetApp> {
     _startHungerTimer();
   }
 
-void _updatePetMood() {
+  void _updatePetMood() {
     if (happinessLevel > 70) {
       setState(() {
         petMood = "Happy 😃";
         petColor = Colors.green;
-        
       });
-    } else if (happinessLevel >= 30 && happinessLevel <=70) {
+
+    } else if (happinessLevel >= 30 && happinessLevel <= 70) {
       setState(() {
         petMood = "Neutral 😐";
         petColor = Colors.orange;
@@ -48,20 +58,16 @@ void _updatePetMood() {
     }
   }
 
-  
-
   // Function to start automatic hunger increase
   void _startHungerTimer() {
-    hungerTimer = Timer.periodic(Duration(seconds: 10), (timer) 
-    {
-      if (!gameOver){
+    hungerTimer = Timer.periodic(Duration(seconds: 10), (timer) {
+      if (!gameOver) {
         setState(() {
           hungerLevel = (hungerLevel + 5).clamp(0, 100);
           energyLevel = (energyLevel - 3).clamp(0, 100);
           _updateHappiness();
-        _updatePetMood();
+          _updatePetMood();
           _checkGameOver();
-        //  print('Mood: $petMood');
         });
       }
     });
@@ -75,17 +81,6 @@ void _updatePetMood() {
       gameOver = false;
       _startHungerTimer();
     });
-  }
-
-  // Function to check for win condition
-  void _checkWin() {
-    if (happinessLevel > 80) {
-      Future.delayed(Duration(minutes: 2), () {
-        if (happinessLevel > 70) {
-          _showDialog("You Win!", "Your pet is happy and well cared for!", reset:true);
-        }
-      });
-    }
   }
 
   // Function to check game over condition
@@ -121,35 +116,43 @@ void _updatePetMood() {
     );
   }
 
+  // Function to confirm and perform the selected activity
+  void _performSelectedActivity() {
+    switch (selectedActivity) {
+      case 'Play':
+        _playWithPet();
+        break;
+      case 'Feed':
+        _feedPet();
+        break;
+      case 'Rest':
+        _restPet();
+        break;
+    }
+  }
+
   // Function to increase happiness and update hunger when playing with the pet
   void _playWithPet() {
     setState(() {
       happinessLevel = (happinessLevel + 10).clamp(0, 100);
-      energyLevel = (energyLevel - 10).clamp(0,100);
+      energyLevel = (energyLevel - 10).clamp(0, 100);
       _updateHunger();
-
       _updatePetMood();
-
-
-      _checkWin();
       _checkGameOver();
-
     });
   }
-  
+
   // Function to decrease hunger and update happiness when feeding the pet
   void _feedPet() {
     setState(() {
       hungerLevel = (hungerLevel - 10).clamp(0, 100);
-      energyLevel = (energyLevel + 5).clamp(0,100);
+      energyLevel = (energyLevel + 5).clamp(0, 100);
       _updateHappiness();
       _updatePetMood();
-      _checkWin();
       _checkGameOver();
-
     });
   }
-  
+
   // Function to let the pet rest
   // Increases energy, slightly decreases happiness
   void _restPet() {
@@ -167,7 +170,7 @@ void _updatePetMood() {
       happinessLevel = (happinessLevel + 10).clamp(0, 100);
     }
   }
-  
+
   // Increase hunger level slightly when playing with the pet
   void _updateHunger() {
     hungerLevel = (hungerLevel + 5).clamp(0, 100);
@@ -176,7 +179,7 @@ void _updatePetMood() {
       happinessLevel = (happinessLevel - 20).clamp(0, 100);
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -204,15 +207,13 @@ void _updatePetMood() {
             ),
 
             Text(
-            'Name: $petName',
-            style: TextStyle(fontSize: 20.0, color: petColor),
+              'Name: $petName',
+              style: TextStyle(fontSize: 20.0, color: petColor),
             ),
             SizedBox(height: 16.0),
             Text(
-            'Happiness Level: $happinessLevel',
-            style: TextStyle(fontSize: 20.0),
-            
-            
+              'Happiness Level: $happinessLevel',
+              style: TextStyle(fontSize: 20.0),
             ),
             SizedBox(height: 16.0),
             Text(
@@ -224,22 +225,36 @@ void _updatePetMood() {
               style: TextStyle(fontSize: 20.0),
             ),
             SizedBox(height: 32.0),
-            ElevatedButton(
-              onPressed: _playWithPet,
-              child: Text('Play with Your Pet'),
-            ),
-            SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: _feedPet,
-              child: Text('Feed Your Pet'),
+
+            // Dropdown for selecting activity
+            DropdownButton<String>(
+              value: selectedActivity,
+              onChanged: (String? newValue) {
+                setState(() {
+                  selectedActivity = newValue!;
+                });
+              },
+              items: activities.map<DropdownMenuItem<String>>((String activity) {
+                return DropdownMenuItem<String>(
+                  value: activity,
+                  child: Text(activity),
+                );
+              }).toList(),
             ),
 
+            // Button to confirm activity and trigger it
+            SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: _performSelectedActivity,
+              child: Text('Perform Activity'),
+            ),
+
+            // Display energy level
             SizedBox(height: 16.0),
             Text(
               'Energy Level:',
               style: TextStyle(fontSize: 20.0),
             ),
-
             SizedBox(height: 8.0),
             LinearProgressIndicator(
               value: energyLevel / 100,
@@ -248,12 +263,6 @@ void _updatePetMood() {
               minHeight: 10,
             ),
             SizedBox(height: 32.0),
-
-            SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: _restPet,
-              child: Text('Let Your Pet Rest'),
-            ),
           ],
         ),
       ),
