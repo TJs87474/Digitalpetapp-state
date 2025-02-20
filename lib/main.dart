@@ -144,7 +144,6 @@ void _updatePetMood() {
       energyLevel = (energyLevel + 5).clamp(0,100);
       _updateHappiness();
       _updatePetMood();
-
       _checkWin();
       _checkGameOver();
 
