@@ -18,7 +18,7 @@ class _DigitalPetAppState extends State<DigitalPetApp> {
     int hungerLevel = 50;
 
     String petMood = "Neutral 😐";
-    Color petColor = Colors.yellow;
+    Color petColor = Colors.orange;
 
     bool gameOver = false;
 
@@ -35,7 +35,7 @@ void _updatePetMood() {
         petColor = Colors.green;
         
       });
-    } else if (happinessLevel >= 30 || happinessLevel <=70) {
+    } else if (happinessLevel >= 30 && happinessLevel <=70) {
       setState(() {
         petMood = "Neutral 😐";
         petColor = Colors.orange;
@@ -187,6 +187,22 @@ void _updatePetMood() {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: TextField(
+                decoration: InputDecoration(
+                  labelText: "Enter your pet's name!",
+                  border: OutlineInputBorder(),
+                ),
+                onSubmitted: (value) {
+                  setState(() {
+                    petName = value;
+                  });
+                },
+              ),
+            ),
+
             Text(
             'Name: $petName',
             style: TextStyle(fontSize: 20.0, color: petColor),
