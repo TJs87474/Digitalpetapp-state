@@ -24,6 +24,8 @@ class _DigitalPetAppState extends State<DigitalPetApp> {
 
   bool gameOver = false;
 
+  String petMood = "Neutral 😐";
+  Color petColor = Colors.orange;
   // Activity options for the dropdown
   List<String> activities = ['Play', 'Feed', 'Rest'];
 
@@ -42,6 +44,7 @@ class _DigitalPetAppState extends State<DigitalPetApp> {
         petMood = "Happy 😃";
         petColor = Colors.green;
       });
+
     } else if (happinessLevel >= 30 && happinessLevel <= 70) {
       setState(() {
         petMood = "Neutral 😐";
@@ -187,6 +190,22 @@ class _DigitalPetAppState extends State<DigitalPetApp> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: TextField(
+                decoration: InputDecoration(
+                  labelText: "Enter your pet's name!",
+                  border: OutlineInputBorder(),
+                ),
+                onSubmitted: (value) {
+                  setState(() {
+                    petName = value;
+                  });
+                },
+              ),
+            ),
+
             Text(
               'Name: $petName',
               style: TextStyle(fontSize: 20.0, color: petColor),
